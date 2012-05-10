@@ -1,0 +1,37 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    active_support (3.0.0)
+      activesupport (= 3.0.0)
+    activemodel (3.0.0)
+      activesupport (= 3.0.0)
+      builder (~> 2.1.2)
+      i18n (~> 0.4.1)
+    activesupport (3.0.0)
+    addressable (2.2.7)
+    awesome_print (1.0.2)
+    builder (2.1.2)
+    cinch (2.0.2)
+    curl (0.0.9)
+      awesome_print (>= 0.2.1)
+      unidecoder (>= 1.1.1)
+    i18n (0.4.2)
+    mime-types (1.18)
+    oauth (0.4.6)
+    rest-client (1.6.7)
+      mime-types (>= 1.16)
+    ruby-trello (0.4.2)
+      activemodel
+      addressable (~> 2.2.6)
+      oauth (~> 0.4.5)
+      rest-client (~> 1.6.7)
+    unidecoder (1.1.1)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  active_support
+  cinch
+  curl
+  ruby-trello

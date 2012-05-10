@@ -1,0 +1,13 @@
+irc:
+  nick: hellotrello
+  server: # enter server here
+  port:   6667
+
+trello:
+  key:    # Your API key, get this at https://trello.com/1/appKey/generate
+  token:  # Get this via https://trello.com/1/authorize?key=substitutewithyourapplicationkey&name=My+Application&expiration=never&response_type=token
+
+teams:
+  - channel:      '#awesometeam'
+    board_id:     '4815162342...'
+    scrum_master: 'marco' # This is optional, pings this user when a changes was detected
