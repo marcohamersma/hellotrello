@@ -41,8 +41,23 @@ class Tickets
     name.capitalize.slice(/^\w+\s?/).strip
   end
 
+  def card_url(activity)
+    "https://trello.com/card/#{activity['data']['board']['id']}/#{activity['data']['card']['idShort']}"
+  end
+
+  def ticket_name(activity)
+    activity['data']['card']['name']
+  end
+
+  def ticket_name_and_url(activity)
+    card_id         = activity['data']['card']['idShort']
+    name            = ticket_name(activity)
+
+    "#{card_id.to_s}: #{name} - #{card_url(activity)}"
+  end
+
   def parseActivities(board_id)
-    params = {:filter => ['createCard','commentCard']}
+    params = { :filter => ['createCard','commentCard', 'updateCard'] }
     params[:since] = $lastChecked if $lastChecked
 
     # Change the board url here
@@ -51,24 +66,24 @@ class Tickets
 
     activities.each do |activity|
       creator = author(activity['memberCreator'])
-      card_id = activity['data']['card']['idShort']
-      name    = activity['data']['card']['name']
-      url     = "https://trello.com/card/#{activity['data']['board']['id']}/#{activity['data']['card']['idShort']}"
 
+      ## This needs to be rewritten for more flexible output
       if activity['type'] == "createCard"
-        action = 'added a new ticket to Trello:'
-      else
-        action = 'added a comment to the ticket'
+        puts "added #{activity['type']} to #{creator}"
+        action = 'added a new ticket to Trello: ' + ticket_name_and_url(activity)
+      elsif activity['type'] == "updateCard" && activity['data']['listAfter']
+        puts "added #{activity['type']} to #{creator}"
+        creator = "someone"
+        action ="The ticket #{ticket_name(activity)} got moved to #{activity['data']['listAfter']['name']}"
+      elsif activity['type'] == "commentCard"
+        puts "added #{activity['type']} to #{creator}"
+        action = 'added a comment to ticket '  + ticket_name_and_url(activity)
       end
 
-      output[creator] = "#{action} ##{card_id.to_s}: #{name} - #{url}"
+      output[creator] = [] unless output[creator]
+      output[creator] << action if action.present?
     end
-
-    output
   end
-
-
-  timer 10.minutes, method: :send_activities
 
   def send_activities
     $config['teams'].each do |team|
@@ -78,21 +93,25 @@ class Tickets
       if list_of_activities == {}
         puts "No new entries for " + team['channel'].to_s
       else
-        list_of_activities.each do |author, activity|
-          message = author + ' ' + activity
-          message << " /cc #{team['scrum_master']}" if team['scrum_master'] && team['scrum_master'].downcase != author.downcase
-          Channel(team['channel']).send(message)
-          puts "posted message to " + team['channel']
+        list_of_activities.each do |author, activities|
+          if author != "someone"
+            message = "#{author} #{activities.to_sentence}"
+          else
+            message = "#{activities.to_sentence}"
+            message << " /cc #{team['scrum_master']}" if team['scrum_master'] && team['scrum_master'].downcase != author.downcase
+            Channel(team['channel']).send(message)
+            puts "posted message to " + team['channel']
+          end
         end
       end
     end
-
     $lastChecked = Time.now
   end
+
+  timer 10.minutes, method: :send_activities
 end
 
 bot = Cinch::Bot.new do
-
   configure do |c|
     c.server = $config['irc']['server']
     c.nick = $config['irc']['nick']
@@ -131,7 +150,6 @@ bot = Cinch::Bot.new do
 
     m.safe_reply message
   end
-
 end
 
 bot.start
