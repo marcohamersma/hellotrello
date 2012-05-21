@@ -35,7 +35,7 @@ class Tickets
 
   $lastChecked = Time.now
 
-  def author(author)
+  def author_name(author)
     name = author['fullName'] || "Someone"
 
     name.capitalize.slice(/^\w+\s?/).strip
@@ -65,24 +65,23 @@ class Tickets
     output = {}
 
     activities.each do |activity|
-      creator = author(activity['memberCreator'])
+      creator = author_name(activity['memberCreator'])
 
-      ## This needs to be rewritten for more flexible output
       if activity['type'] == "createCard"
-        puts "added #{activity['type']} to #{creator}"
         action = 'added a new ticket to Trello: ' + ticket_name_and_url(activity)
       elsif activity['type'] == "updateCard" && activity['data']['listAfter']
-        puts "added #{activity['type']} to #{creator}"
         creator = "someone"
-        action ="The ticket #{ticket_name(activity)} got moved to #{activity['data']['listAfter']['name']}"
+        action ="The ticket \"#{ticket_name(activity)}\" got moved to #{activity['data']['listAfter']['name']}"
       elsif activity['type'] == "commentCard"
-        puts "added #{activity['type']} to #{creator}"
         action = 'added a comment to ticket '  + ticket_name_and_url(activity)
       end
 
-      output[creator] = [] unless output[creator]
-      output[creator] << action if action.present?
+      if action.present?
+        output[creator] = [] unless output[creator]
+        output[creator] << action if action.present?
+      end
     end
+    output
   end
 
   def send_activities
@@ -98,10 +97,11 @@ class Tickets
             message = "#{author} #{activities.to_sentence}"
           else
             message = "#{activities.to_sentence}"
-            message << " /cc #{team['scrum_master']}" if team['scrum_master'] && team['scrum_master'].downcase != author.downcase
-            Channel(team['channel']).send(message)
-            puts "posted message to " + team['channel']
           end
+
+          message << " /cc #{team['scrum_master']}" if team['scrum_master'] && team['scrum_master'].downcase != author.downcase
+          Channel(team['channel']).send(message)
+          puts "posted message to " + team['channel']
         end
       end
     end
