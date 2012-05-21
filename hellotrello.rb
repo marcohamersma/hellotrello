@@ -15,7 +15,7 @@ end
 
 # Generates the Regexp pattern that's used for detecting incoming commands
 def command(input)
-  Regexp.new("#{$config['nick']}_?:?\s?#{input}")
+  Regexp.new("#{$config['irc']['nick']}_?:?\s?#{input}")
 end
 
 def truncate(string)
