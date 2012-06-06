@@ -118,6 +118,7 @@ bot = Cinch::Bot.new do
     c.channels = $config['teams'].each.map{|c| c['channel']}
     c.port = $config['irc']['port']
     c.plugins.plugins = [Tickets]
+    c.ssl.use = true if $config['irc']['ssl']
   end
 
   on :message, command('help') do |m|
