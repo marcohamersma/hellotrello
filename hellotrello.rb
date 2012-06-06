@@ -119,6 +119,7 @@ bot = Cinch::Bot.new do
     c.port = $config['irc']['port']
     c.plugins.plugins = [Tickets]
     c.ssl.use = true if $config['irc']['ssl']
+    c.password = $config['irc']['password'] if $config['irc']['password']
   end
 
   on :message, command('help') do |m|
