@@ -42,6 +42,8 @@ class Horse
 
       if tweet['id'] != $lastTweetId
         puts tweet['text']
+
+        Channel($config['teams'].first['channel']).send(tweet['text'])
         $lastTweetId = tweet['id']
       end
     end
