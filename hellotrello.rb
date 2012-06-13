@@ -30,6 +30,25 @@ def cleanup(string)
   string.gsub(/(?:\#{1,3}\s?|\(http:\/\/.*\))/, '').gsub(/\n/, ' ').strip
 end
 
+class Horse
+  include Cinch::Plugin
+
+  $lastTweetId = 0
+
+  def fetchlastTweet
+    begin
+      tweets = open('http://twitter.com/statuses/user_timeline/174958347.json').read
+      tweet = JSON.parse(tweets).first
+
+      if tweet['id'] != $lastTweetId
+        puts tweet['text']
+        $lastTweetId = tweet['id']
+      end
+    end
+  end
+  timer 13.minutes, method: :fetchlastTweet
+end
+
 class Tickets
   include Cinch::Plugin
 
@@ -117,7 +136,7 @@ bot = Cinch::Bot.new do
     c.nick = $config['irc']['nick']
     c.channels = $config['teams'].each.map{|c| c['channel']}
     c.port = $config['irc']['port']
-    c.plugins.plugins = [Tickets]
+    c.plugins.plugins = [Tickets, Horse]
     c.ssl.use = true if $config['irc']['ssl']
     c.password = $config['irc']['password'] if $config['irc']['password']
   end
