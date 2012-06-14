@@ -40,12 +40,11 @@ class Horse
       tweets = open('http://twitter.com/statuses/user_timeline/174958347.json').read
       tweet = JSON.parse(tweets).first
 
-      if tweet['id'] != $lastTweetId
-        puts tweet['text']
-
+      if tweet['id'] != $lastTweetId && tweet['text'] !~ /http:\/\//
         Channel($config['teams'].first['channel']).send(tweet['text'])
-        $lastTweetId = tweet['id']
       end
+
+      $lastTweetId = tweet['id']
     end
   end
   timer 13.minutes, method: :fetchlastTweet
