@@ -41,7 +41,7 @@ class Horse
       tweet = JSON.parse(tweets).first
 
       if tweet['id'] != $lastTweetId && tweet['text'] !~ /http:\/\//
-        Channel($config['teams'].first['channel']).send(tweet['text'])
+        Channel($config['horse_channel']).send(tweet['text'])
       end
 
       $lastTweetId = tweet['id']
@@ -131,15 +131,23 @@ class Tickets
   timer 10.minutes, method: :send_activities
 end
 
+bot_channels = $config['teams'].each.map{|c| c['channel']}
+bot_plugins  = [Tickets]
+
 bot = Cinch::Bot.new do
   configure do |c|
     c.server = $config['irc']['server']
     c.nick = $config['irc']['nick']
     c.channels = $config['teams'].each.map{|c| c['channel']}
     c.port = $config['irc']['port']
-    c.plugins.plugins = [Tickets, Horse]
+    c.plugins.plugins = [Tickets]
     c.ssl.use = true if $config['irc']['ssl']
     c.password = $config['irc']['password'] if $config['irc']['password']
+
+    if $config['horse_channel']
+      c.channels << $config['horse_channel']
+      c.plugins.plugins << Horse
+    end
   end
 
   on :message, command('help') do |m|
