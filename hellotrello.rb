@@ -164,7 +164,7 @@ bot = Cinch::Bot.new do
   end
 
   on :message, command("getme ([a-zA-Z].*$)") do |m, what|
-    m.safe_reply "Silly #{m.user.nick}! He asked me to get #{what}. I can only get tickets!"
+    m.safe_reply "Silly #{m.user.nick}! I can't get #{what}! I can only get tickets!"
   end
 
   on :message, command("getme ([0-9]{1,5})") do |m, ticket_id|
