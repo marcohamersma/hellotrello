@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 require 'cinch'
 require 'net/http'
 require 'open-uri'
@@ -77,7 +78,7 @@ class Tickets
   end
 
   def parseActivities(board_id)
-    params = { :filter => ['createCard','commentCard', 'updateCard'] }
+    params = { :filter => ['createCard','commentCard', 'updateCard', 'updateCard::closed'] }
     params[:since] = $lastChecked if $lastChecked
 
     # Change the board url here
@@ -86,19 +87,29 @@ class Tickets
 
     activities.each do |activity|
       creator = author_name(activity['memberCreator'])
+      activityData = activity['data']
+      type = activity['type']
 
-      if activity['type'] == "createCard"
-        action = 'added a new ticket to Trello: ' + ticket_name_and_url(activity)
-      elsif activity['type'] == "updateCard" && activity['data']['listAfter']
-        creator = "someone"
-        action ="The ticket \"#{ticket_name(activity)}\" got moved to #{activity['data']['listAfter']['name']}"
-      elsif activity['type'] == "commentCard"
-        action = 'added a comment to ticket '  + ticket_name_and_url(activity)
+      case type
+      when "createCard"
+        action = '[NEW]  ' + ticket_name_and_url(activity)
+      when "updateCard"
+        if activityData['card'] && activityData['card']['closed'] == true
+          action = "[CLOSED]  " + ticket_name_and_url(activity)
+        elsif activityData['listAfter'] && activityData['listBefore']
+          before = activityData['listBefore']['name']
+          after = activityData['listAfter']['name']
+          action ="[#{before}] > [#{after}]  \"#{ticket_name(activity)}\""
+        else
+          action ="[UPDATE]  \"#{ticket_name(activity)}\" - #{card_url(activity)}"
+        end
+      when "commentCard"
+        action = "[COMMENT] #{creator} on "  + ticket_name_and_url(activity)
       end
 
       if action.present?
-        output[creator] = [] unless output[creator]
-        output[creator] << action if action.present?
+        output[type] = [] unless output[type]
+        output[type] << action
       end
     end
     output
@@ -112,17 +123,14 @@ class Tickets
       if list_of_activities == {}
         puts "No new entries for " + team['channel'].to_s
       else
-        list_of_activities.each do |author, activities|
-          if author != "someone"
-            message = "#{author} #{activities.to_sentence}"
-          else
-            message = "#{activities.to_sentence}"
-          end
-
-          message << " /cc #{team['scrum_master']}" if team['scrum_master'] && team['scrum_master'].downcase != author.downcase
-          Channel(team['channel']).send(message)
-          puts "posted message to " + team['channel']
+        message = ''
+        list_of_activities.each do |type, activities|
+          message = activities.join("\n")
         end
+
+        message << "\n/cc #{team['scrum_master']}" if team['scrum_master']
+        Channel(team['channel']).send(message)
+        puts "posted message to " + team['channel']
       end
     end
     $lastChecked = Time.now
