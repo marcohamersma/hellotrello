@@ -6,6 +6,7 @@ This bot checks a Trello board periodically and sends notifications of card crea
 -  Generate an API key at [trello.com/1/appKey](https://trello.com/1/appKey/generate)
 -  Request a token via: `https://trello.com/1/authorize?key=substitutewithyourapplicationkey&name=My+Application&expiration=never&response_type=token`
 -  Add the token and API key, Trello board id and an optional scrum master to `config.yaml`
+  - Multiple boards per team are allowed, just make the board ID an array
 -  Run `bundle install`
 -  Run it (by typing `ruby hellotrello.rb` for example)
 -  Profit
