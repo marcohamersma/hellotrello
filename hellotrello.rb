@@ -105,6 +105,11 @@ class Tickets
         end
       when "commentCard"
         action = "[COMMENT] #{creator} on "  + ticket_name_and_url(activity)
+        mentions = activityData['text'].scan(/@(\w{2,13})/i).flatten
+
+        if (!mentions.empty?)
+          action += " [mentions " + mentions.join(', ') + ']'
+        end
       end
 
       if action.present?
