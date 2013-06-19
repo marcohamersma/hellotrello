@@ -78,7 +78,7 @@ class Tickets
   end
 
   def parseActivities(board_id)
-    params = { :filter => ['createCard','commentCard', 'updateCard', 'updateCard::closed'] }
+    params = { :filter => ['createCard','commentCard', 'updateCard', 'updateCard::closed'].join(',') }
     params[:since] = $lastChecked if $lastChecked
 
     # Change the board url here
