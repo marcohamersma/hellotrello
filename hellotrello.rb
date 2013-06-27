@@ -75,8 +75,7 @@ class Tickets
       already_displayed
     end
 
-    activities.each do |activity|
-      $displayed_event_ids.push(activity['id'])
+    activities.reverse.each do |activity|
       creator = author_name(activity['memberCreator'])
       activityData = activity['data']
       type = activity['type']
