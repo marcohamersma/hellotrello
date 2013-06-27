@@ -85,7 +85,7 @@ class Tickets
     activities = fetch("https://api.trello.com/1/boards/#{board_id}/actions/", params)
     output = {}
 
-    activities.each do |activity|
+    activities.reverse.each do |activity|
       creator = author_name(activity['memberCreator'])
       activityData = activity['data']
       type = activity['type']
