@@ -147,6 +147,11 @@ bot = Cinch::Bot.new do
     m.reply "OHAI fellas! I'll post new Trello tickets and comments on tickets to your magnificent channel. You can also request a ticket's description by typing '#{$config['nick']} getme 123'. If you want, you can add a 'scrum master' for your team to my config file, this person will receive a mention when a change occurs."
   end
 
+  on :message, command('quit') do |m|
+    m.reply "Quitting!"
+    bot.quit
+  end
+
   on :message, Regexp.new("(?:hey|hej|hello|ohai) #{$config['irc']['nick']}") do |m|
     m.reply "#{m.user.nick}: Hey!"
   end
@@ -175,4 +180,6 @@ bot = Cinch::Bot.new do
   end
 end
 
+bot.loggers.first.level = :warn
+puts "Starting bot..."
 bot.start
