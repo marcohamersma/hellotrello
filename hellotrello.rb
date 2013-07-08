@@ -119,9 +119,7 @@ class Tickets
       [team['board_id']].flatten.each do |board_id|
         list_of_activities = parseActivities(board_id)
 
-        if list_of_activities == {}
-          puts "No new entries for " + team['channel'].to_s
-        else
+        unless list_of_activities == {}
           list_of_activities.each do |type, activities|
             message = activities.join("\n")
           end
@@ -131,7 +129,7 @@ class Tickets
       if message.present?
         message << "\n/cc #{team['scrum_master']}" if team['scrum_master']
         Channel(team['channel']).send(message)
-        puts "posted message to " + team['channel']
+        puts "posted activities to " + team['channel']
       end
     end
     $lastChecked = Time.now
