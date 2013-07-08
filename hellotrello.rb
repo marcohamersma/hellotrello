@@ -80,7 +80,7 @@ class Tickets
           before = activityData['listBefore']['name']
           after = activityData['listAfter']['name']
           action ="[#{before}] > [#{after}]  \"#{ticket_name(activity)}\""
-        else
+        elsif !(activityData['old'] && activityData['old'].keys == ["pos"])
           action ="[UPDATE]  \"#{ticket_name(activity)}\" - #{card_url(activity)}"
         end
       when "commentCard"
