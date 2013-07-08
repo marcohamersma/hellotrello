@@ -34,6 +34,7 @@ end
 class Tickets
   include Cinch::Plugin
 
+  $displayed_event_ids = []
   $lastChecked = Time.now
 
   def author_name(author)
@@ -57,6 +58,7 @@ class Tickets
     "#{card_id.to_s}: #{name} - #{card_url(activity)}"
   end
 
+  # TODO: should be split up into a fetch, filter and announce methods, which are testable.
   def parseActivities(board_id)
     params = { :filter => ['createCard','commentCard', 'updateCard', 'updateCard::closed'].join(',') }
     params[:since] = $lastChecked if $lastChecked
@@ -65,7 +67,16 @@ class Tickets
     activities = fetch("https://api.trello.com/1/boards/#{board_id}/actions/", params)
     output = {}
 
+    activities.reject! do |activity|
+      already_displayed = $displayed_event_ids.include?(activity['id'])
+      if already_displayed
+        puts "Found duplicate activity " + activity['id']
+      end
+      already_displayed
+    end
+
     activities.each do |activity|
+      $displayed_event_ids.push(activity['id'])
       creator = author_name(activity['memberCreator'])
       activityData = activity['data']
       type = activity['type']
