@@ -17,4 +17,12 @@ This bot checks a Trello board periodically and sends notifications of card crea
 - `hellotrello quit` : quits the bot
 
 ### Todos
+-  Better modularisation
+-  Add a procfile
+-  The config file should be config.example.yaml
+-  Print board name when teams have multiple boards
 -  Make new ticket by title and get a link and number in return
+
+### could dos
+-  Dynamic polling intervals based upon board activity / time of day
+-  Elegant solution for when multiple teams follow one board
