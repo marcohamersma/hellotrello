@@ -165,7 +165,7 @@ bot = Cinch::Bot.new do
     m.reply "#{m.user.nick}: Hey!"
   end
 
-  on :message, "cats" do |m|
+  on :message, /(?:^| )cats(?: |$)/ do |m|
     sleep 5
     m.reply "Oh! I like cats!"
   end
