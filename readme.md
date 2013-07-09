@@ -14,6 +14,7 @@ This bot checks a Trello board periodically and sends notifications of card crea
 ## Commands
 - `hellotrello help` : Will display a small text of possible commands.
 - `hellotrello getme 123`: Will retrieve a description and link for that card.
+- `hellotrello quit` : quits the bot
 
 ### Todos
 -  Make new ticket by title and get a link and number in return
