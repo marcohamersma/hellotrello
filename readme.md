@@ -18,6 +18,7 @@ This bot checks a Trello board periodically and sends notifications of card crea
 
 ### Todos
 -  Better modularisation
+-  Use proper Ruby logging, not puts
 -  Add a procfile
 -  The config file should be config.example.yaml
 -  Print board name when teams have multiple boards
