@@ -4,6 +4,7 @@ This bot checks a Trello board periodically and sends notifications of card crea
 
 ## Setup
 -  Generate an API key at [trello.com/1/appKey](https://trello.com/1/appKey/generate)
+-  Make a copy of `config.example.yml` and rename it `config.yml`
 -  Request a token via: `https://trello.com/1/authorize?key=substitutewithyourapplicationkey&name=My+Application&expiration=never&response_type=token`
 -  Add the token and API key, Trello board id and an optional scrum master to `config.yaml`
   - Multiple boards per team are allowed, just make the board ID an array
@@ -20,7 +21,6 @@ This bot checks a Trello board periodically and sends notifications of card crea
 -  Better modularisation
 -  Use proper Ruby logging, not puts
 -  Add a procfile
--  The config file should be config.example.yaml
 -  Print board name when teams have multiple boards
 -  Make new ticket by title and get a link and number in return
 
