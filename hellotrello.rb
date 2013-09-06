@@ -105,7 +105,7 @@ class Tickets
 
       if action.present?
         output[type] = [] unless output[type]
-        output[type] << action
+        output[type].push(action)
       end
     end
     output
@@ -121,7 +121,7 @@ class Tickets
 
         unless list_of_activities == {}
           list_of_activities.each do |type, activities|
-            message = activities.join("\n")
+            message = activities.uniq.join("\n")
           end
         end
       end
