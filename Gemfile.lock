@@ -1,8 +1,6 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    active_support (3.0.0)
-      activesupport (= 3.0.0)
     activemodel (3.0.0)
       activesupport (= 3.0.0)
       builder (~> 2.1.2)
@@ -31,7 +29,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  active_support
+  activesupport
   cinch (~> 2.0.5)
   curl
   ruby-trello
