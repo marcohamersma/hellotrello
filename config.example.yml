@@ -5,7 +5,7 @@ irc:
 
 trello:
   key:    # Your API key, get this at https://trello.com/1/appKey/generate
-  token:  # Get this via https://trello.com/1/authorize?key=substitutewithyourapplicationkey&name=My+Application&expiration=never&response_type=token
+  token:  # Get this via https://trello.com/1/authorize?key=APIKEY&name=HelloTrello&expiration=never&response_type=token
 
 teams:
   - channel:      '#awesometeam'
