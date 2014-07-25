@@ -137,15 +137,11 @@ class Tickets
 
   timer 10.minutes, method: :send_activities
 end
-
-bot_channels = $config['teams'].each.map{|c| c['channel']}
-bot_plugins  = [Tickets]
-
 bot = Cinch::Bot.new do
   configure do |c|
     c.server = $config['irc']['server']
     c.nick = $config['irc']['nick']
-    c.channels = $config['teams'].each.map{|c| c['channel']}
+    c.channels = $config['teams'].each.map { |team| [team['channel'], team['key']].join(' ')}
     c.port = $config['irc']['port']
     c.plugins.plugins = [Tickets]
     c.ssl.use = true if $config['irc']['ssl']
