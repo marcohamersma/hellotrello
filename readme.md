@@ -21,8 +21,11 @@ This bot checks a Trello board periodically and sends notifications of card crea
 -  Better modularisation
 -  Use proper Ruby logging, not puts
 -  Add a procfile
+-  Test for processing changes
 -  Print board name when teams have multiple boards
 -  Make new ticket by title and get a link and number in return
+
+I might just want to rewrite this all in Javascript soon ;)
 
 ### could dos
 -  Dynamic polling intervals based upon board activity / time of day

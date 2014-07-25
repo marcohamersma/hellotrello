@@ -9,6 +9,7 @@ trello:
 
 teams:
   - channel:      '#awesometeam'
+    key:          ''              # Channel key/password if there is one
     board_id:     '4815162342...' # Change this to an array for multiple boards
     scrum_master: 'marco'         # This is optional, pings this user when a changes was detected
 
